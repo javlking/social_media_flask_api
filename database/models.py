@@ -86,11 +86,33 @@ class Post(db.Model):
 
         db.session.commit()
 
-
     ## ДЗ ##
     # Изменить header
+    def change_header(self, post_id, new_header):
+        current_post = Post.query.get_or_404(post_id)
+
+        if current_post.header == new_header:
+            return 'В новом заголовке нет никаких изменений'
+
+        current_post.header = new_header
+
+        db.session.commit()
+
     # Удалить пост
+    def delete_post(self, post_id):
+        current_post = Post.query.get_or_404(post_id)
+
+        db.session.delete(current_post)
+        db.session.commit()
+
     # Счетчик лайков
+    def post_likes_increment(self, post_id):
+        current_post = Post.query.get_or_404(post_id)
+
+        # Добавляем лайк
+        current_post.post_likes += 1
+
+        db.session.commit()
 
 
 # Таблица фото
@@ -130,6 +152,13 @@ class Comment(db.Model):
 
     ## ДЗ ##
     # Изменить текст коментария
+    def change_comment_text(self, comment_id, new_text):
+        current_comment = Comment.query.get_or_404(comment_id)
+
+        # Изменяем текст коментария
+        current_comment.text = new_text
+
+        db.session.commit()
 
 
 # Таблица хэштэгов
@@ -158,6 +187,17 @@ class Password(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-
     ## ДЗ ##
     # Изменение пароля
+    def change_password(self, user_id, new_password):
+        user_password = Password.query.get_or_404(user_id)
+
+        # Меняем описание
+        if user_password.password == new_password:
+            return 'Новый пароль должен отличаться от старого'
+
+        user_password.about = new_password
+
+        db.session.commit()
+
+
