@@ -10,8 +10,16 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=True)
     email = db.Column(db.String, nullable=False)
-    phone_number = db.Column(db.String, nullable=False)
+    phone_number = db.Column(db.String, nullable=False, unique=True)
     about = db.Column(db.String, nullable=True)
+
+    # Создать пользователя
+    def registration(self, username, first_name, last_name, email, phone_number, about):
+        new_user = User(username=username, first_name=first_name, last_name=last_name,
+                        email=email, phone_number=phone_number, about=about)
+
+        db.session.add(new_user)
+        db.session.commit()
 
     # Изменить имя
     def change_username(self, user_id, new_username):
@@ -175,7 +183,7 @@ class Hashtag(db.Model):
 class Password(db.Model):
     __tablename__ = 'passwords'
     password = db.Column(db.String, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NUll'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NUll'), primary_key=True)
 
     user = db.relationship('User')
 
